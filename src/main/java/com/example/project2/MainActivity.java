@@ -16,18 +16,22 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Toolbar myToolbar;
 
     private GridAdapter gridAdapter;
     private ArrayList<String> dayList;
     private GridView gridView;
 
     private Calendar mCal;
-    private Calendar sCal;
 
 
     @Override
@@ -40,38 +44,49 @@ public class MainActivity extends AppCompatActivity {
         gridView = (GridView)findViewById(R.id.gridview);
         mCal = Calendar.getInstance();
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        //오늘 날짜 세팅
+        long now = System.currentTimeMillis();
+        final Date date = new Date(now);
+
+        final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA); //년 저장
+        final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA); //월 저장
+        final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA); //일 저장
+
+        myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        myToolbar.setTitle(mCal.get(Calendar.YEAR) + "년" +mCal.get(Calendar.MONTH)+ "월"); //툴바 날짜
+        myToolbar.setTitle(curYearFormat.format(date) + "년" +curMonthFormat.format(date)+ "월"); //툴바 날짜
 
-        dayList = new ArrayList<String>();
+        dayList = new ArrayList<String>(); //gridview 요일 표시
 
-        int year= Calendar.getInstance().get(Calendar.YEAR);
-        int month= Calendar.getInstance().get(Calendar.MONTH);
-        int dayNum= Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        int dayofmonth= Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+        mCal = Calendar.getInstance();
 
-        sCal= Calendar.getInstance();
-        sCal.set(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH) , 1);
-
-        //공백을 넣어주기 위해 생성
+        //이번달 1일 무슨요일인지 판단
+        mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
+        int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
+        //1일 - 요일 매칭 시키기 위해 공백 add
         for (int i = 1; i < dayNum; i++) {
             dayList.add("");
         }
-
-        for (int i = 0; i < sCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-            dayList.add("" + (i + 1));
-        }
+        setCalendarDate(mCal.get(Calendar.MONTH) + 1);
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
 
     }
 
+    private void setCalendarDate(int month) {
+        mCal.set(Calendar.MONTH, month - 1);
+
+        for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+            dayList.add("" + (i + 1));
+        }
+    }//월에 표시할 일 수 구하기
+
+
+
     private class GridAdapter extends BaseAdapter {
         private final List<String> list;
         private final LayoutInflater inflater;
-
 
         public GridAdapter(Context context, List<String> list) {
             this.list = list;
@@ -99,11 +114,10 @@ public class MainActivity extends AppCompatActivity {
 
             GridView gridView = (GridView)findViewById(R.id.gridview);
 
-            int gridviewH = gridView.getHeight() / 6;
-
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.day, parent, false);
                 holder = new ViewHolder();
+
                 holder.tvItemGridView = (TextView)convertView.findViewById(R.id.day);
                 convertView.setTag(holder);
             }
@@ -114,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
             holder.tvItemGridView.setText("" + getItem(position));
 
+            mCal = Calendar.getInstance(); //오늘 day 가져옴
             mCal = Calendar.getInstance(); //오늘 day 가져옴
 
             Integer today = mCal.get(Calendar.DAY_OF_MONTH);
@@ -126,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
     private class ViewHolder {
         TextView tvItemGridView;
     }
-
 
 
     @Override
