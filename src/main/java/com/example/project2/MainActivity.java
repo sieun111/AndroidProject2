@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,9 +13,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,9 +68,11 @@ public class MainActivity extends AppCompatActivity {
         int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
         //1일 - 요일 매칭 시키기 위해 공백 add
         for (int i = 1; i < dayNum; i++) {
-            dayList.add("");
+            dayList.add(" ");
         }
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
+
+
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
@@ -80,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
             dayList.add("" + (i + 1));
         }
+
+
     }//월에 표시할 일 수 구하기
 
 
@@ -114,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
             GridView gridView = (GridView)findViewById(R.id.gridview);
 
+            //int gridviewH = gridView.getHeight()/7;
+            //그리드뷰안에 날짜를 출력할 TextView의 높이를 그리드뷰의 높이/7 로 잡아준다.
+            //TextView day = (TextView)findViewById(R.id.day);
+            //day.setHeight(gridviewH);
+            //실행 오류
+
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.day, parent, false);
                 holder = new ViewHolder();
@@ -124,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
             else {
                 holder = (ViewHolder)convertView.getTag();
+
             }
 
             holder.tvItemGridView.setText("" + getItem(position));
@@ -133,6 +147,23 @@ public class MainActivity extends AppCompatActivity {
 
             Integer today = mCal.get(Calendar.DAY_OF_MONTH);
             String sToday = String.valueOf(today);
+
+            mCal = Calendar.getInstance();
+
+            //gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            //    ViewHolder holder = null;
+            //    @Override
+            //    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            //        holder.tvItemGridView.setBackgroundColor(Color.CYAN);
+            //    }
+            //}); //날짜 누르면 색 바뀜
+
+            //오늘 day 가져옴
+            Integer DAY = mCal.get(Calendar.DAY_OF_MONTH);
+            String Day = String.valueOf(DAY);
+            if (Day.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
+                holder.tvItemGridView.setBackgroundColor(Color.CYAN);
+            }//오늘날짜 색 바꿈 ````````
 
             return convertView;
         }
