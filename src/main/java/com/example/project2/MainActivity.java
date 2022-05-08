@@ -74,9 +74,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this,
+                        mCal.get(Calendar.YEAR)+"."+ (mCal.get(Calendar.MONTH)+1),Toast.LENGTH_SHORT).show();
+            }
+        }); //toast 메시지 띄움
+
+
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
-
     }
 
     private void setCalendarDate(int month) {
@@ -85,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
             dayList.add("" + (i + 1));
         }
-
 
     }//월에 표시할 일 수 구하기
 
@@ -119,12 +126,12 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
 
-            GridView gridView = (GridView)findViewById(R.id.gridview);
-
-            //int gridviewH = gridView.getHeight()/7;
-            //그리드뷰안에 날짜를 출력할 TextView의 높이를 그리드뷰의 높이/7 로 잡아준다.
-            //TextView day = (TextView)findViewById(R.id.day);
-            //day.setHeight(gridviewH);
+            //GridView gridView = (GridView)findViewById(R.id.gridview);
+            //int gridviewH = (gridView.getHeight()/6);
+            //그리드뷰안에 날짜를 출력할 TextView의 높이를 그리드뷰의 높이/6 로 잡아준다.
+            //TextView textView = (TextView)findViewById(R.id.day);
+            //
+            // textView.setHeight(gridviewH);
             //실행 오류
 
             if (convertView == null) {
@@ -158,12 +165,11 @@ public class MainActivity extends AppCompatActivity {
             //    }
             //}); //날짜 누르면 색 바뀜
 
-            //오늘 day 가져옴
-            Integer DAY = mCal.get(Calendar.DAY_OF_MONTH);
+            Integer DAY = mCal.get(Calendar.DAY_OF_MONTH); //오늘 날짜 가져옴
             String Day = String.valueOf(DAY);
-            if (Day.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
+            if (Day.equals(getItem(position))) {
                 holder.tvItemGridView.setBackgroundColor(Color.CYAN);
-            }//오늘날짜 색 바꿈 ````````
+            }//오늘 날짜 색 바꿈
 
             return convertView;
         }
