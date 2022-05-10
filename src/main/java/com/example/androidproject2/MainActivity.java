@@ -1,7 +1,10 @@
 package com.example.androidproject2;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +32,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private Toolbar myToolbar;
-
     private GridAdapter gridAdapter;
     private ArrayList<String> dayList;
     private GridView gridView;
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        ViewPager2 vpPager = findViewById(R.id.vpPager);
+        FragmentStateAdapter adapter = new PagerAdapter(this);
+        vpPager.setAdapter(adapter);
+
         Intent intent= getIntent(); //시작 정보
 
         gridView = (GridView)findViewById(R.id.gridview);
@@ -58,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
         final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA); //년 저장
         final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA); //월 저장
         final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA); //일 저장
-
-        //myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
-        //setSupportActionBar(myToolbar);
-        //myToolbar.setTitle(curYearFormat.format(date) + "년" +curMonthFormat.format(date)+ "월"); //툴바 날짜
 
         dayList = new ArrayList<String>(); //gridview 요일 표시
 
@@ -77,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
 
 
+        ActionBar ab = getSupportActionBar() ;
+        ab.setTitle(mCal.get(Calendar.YEAR) + "년" +(mCal.get(Calendar.MONTH)+1)+ "월") ;
+        //앱바에 현재 표시된 달력의 연월 표시
+
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
+
+
     }
 
     private void setCalendarDate(int month) {
@@ -97,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
             dayList.add("" + (i + 1));
         }
-
     }//월에 표시할 일 수 구하기
 
 
@@ -154,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             holder.tvItemGridView.setText("" + getItem(position));
 
             mCal = Calendar.getInstance(); //오늘 day 가져옴
-            mCal = Calendar.getInstance(); //오늘 day 가져옴
 
             Integer today = mCal.get(Calendar.DAY_OF_MONTH);
             String sToday = String.valueOf(today);
@@ -203,5 +208,5 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }//메뉴를 누르면 해당 페이지로 이동
 }
