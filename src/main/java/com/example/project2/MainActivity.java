@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA); //월 저장
         final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA); //일 저장
 
-        myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        myToolbar.setTitle(curYearFormat.format(date) + "년" +curMonthFormat.format(date)+ "월"); //툴바 날짜
+        //myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        //setSupportActionBar(myToolbar);
+        //myToolbar.setTitle(curYearFormat.format(date) + "년" +curMonthFormat.format(date)+ "월"); //툴바 날짜
 
         dayList = new ArrayList<String>(); //gridview 요일 표시
 
